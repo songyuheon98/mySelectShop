@@ -4,8 +4,11 @@ import com.sparta.myselectshop.dto.FolderResponseDto;
 import com.sparta.myselectshop.entity.Folder;
 import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.repository.FolderRepository;
+import com.sparta.myselectshop.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
