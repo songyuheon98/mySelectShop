@@ -29,7 +29,7 @@ public class Scheduler {
      * cron은 특정 시간 특정 작업을 해주는 스케줄링 역활을 합니다.
      * https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html
      */
-    @Scheduled(cron = "*/10 * * * * *") // 매일 새벽 1시
+    @Scheduled(cron = "0 0 1 * * *") // 매일 새벽 1시
     public void updatePrice() throws InterruptedException {
         log.info("가격 업데이트 실행");
 
