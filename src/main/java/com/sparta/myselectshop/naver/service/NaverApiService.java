@@ -27,7 +27,12 @@ public class NaverApiService {
     }
 
     public List<ItemDto> searchItems(String query) {
-        // 요청 URL 만들기
+        /**
+         * Naver Open Api 형식에 맞추어 URI 만들기
+         * 모든 URL은 URI이지만
+         * 모든 URI는 URL이 아니다
+         * 즉 URI는 URL의 상위 개념이다
+         */
         URI uri = UriComponentsBuilder
                 .fromUriString("https://openapi.naver.com")
                 .path("/v1/search/shop.json")
@@ -38,6 +43,9 @@ public class NaverApiService {
                 .toUri();
         log.info("uri = " + uri);
 
+        /**
+         * HTTP 요청 생성
+         */
         RequestEntity<Void> requestEntity = RequestEntity
                 .get(uri)
                 .header("X-Naver-Client-Id", "GgYBXwGsB6S2sDSPLkHg")

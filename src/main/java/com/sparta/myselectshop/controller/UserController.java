@@ -1,12 +1,17 @@
 package com.sparta.myselectshop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.myselectshop.dto.SignupRequestDto;
 import com.sparta.myselectshop.dto.UserInfoDto;
 import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.entity.UserRoleEnum;
+import com.sparta.myselectshop.jwt.JwtUtil;
 import com.sparta.myselectshop.security.UserDetailsImpl;
 import com.sparta.myselectshop.service.FolderService;
+import com.sparta.myselectshop.service.KakaoService;
 import com.sparta.myselectshop.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class UserController {
 
     private final UserService userService;
     private final FolderService folderService;
+    private final KakaoService kakaoService;
 
     @GetMapping("/user/login-page")
     public String loginPage() {
@@ -72,5 +75,26 @@ public class UserController {
     public String getUserInfo(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails){
         model.addAttribute("folders",folderService.getFolders(userDetails.getUser()));
         return "index :: #fragment";
+    }
+
+    @GetMapping("/user/kakao/callback")
+    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        /**
+         * kakaoService의 kakaoLogin함수에서 만든 쿠키를 "authorization"이라는 이름으로 cookie 객체에 저장
+         */
+        String token = kakaoService.kakaoLogin(code);
+        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER,token);
+        /**
+         * setPath 메소드는 쿠키가 전송되어야 하는 URL 경로를 지정하는데 사용
+         * "/"로 설정하면 모든 URL에서 쿠키를 전송할 수 있음
+         * 쿠키가 사용자의 브라우저에 설정되면, 그 이후의 모든 HTTP 요청에 자동으로 포함
+         * Cookie[] cookies = request.getCookies();를 통해 쿠키 호출 및 사용 가능
+         */
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+
+        return "redirect:/";
+
     }
 }
