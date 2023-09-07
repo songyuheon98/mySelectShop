@@ -83,7 +83,7 @@ public class UserController {
          * kakaoService의 kakaoLogin함수에서 만든 쿠키를 "authorization"이라는 이름으로 cookie 객체에 저장
          */
         String token = kakaoService.kakaoLogin(code);
-        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER,token);
+        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER,token.substring(7));
         /**
          * setPath 메소드는 쿠키가 전송되어야 하는 URL 경로를 지정하는데 사용
          * "/"로 설정하면 모든 URL에서 쿠키를 전송할 수 있음
